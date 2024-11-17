@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Anagrafica Utenti</title>
+</head>
+
+<body>
+    <h1>Gestione Anagrafica Utenti</h1>
+    <form action="visualizza.php" method="post">
+        <input type="text" name="nome" placeholder="Nome (solo lettere)" pattern="[A-Za-z\s]+" required><br><br>
+        <input type="text" name="cognome" placeholder="Cognome (solo lettere e apostrofo)" pattern="[A-Za-z\s']+"
+            required><br><br>
+        <input type="date" name="data_nascita" required><br><br>
+        <input type="text" name="codice_fiscale" placeholder="Codice Fiscale (opzionale)"><br><br>
+        <input type="email" name="email" placeholder="Email" required><br><br>
+        <input type="tel" name="cellulare" placeholder="Cellulare (12 cifre)" pattern="\d{10}"><br><br>
+        <input type="text" name="indirizzo" placeholder="Indirizzo (via/piazza)" pattern="[A-Za-z\s']+"
+            required><br><br>
+        <input type="text" name="cap" placeholder="CAP (5 cifre)" pattern="\d{5}" required><br><br>
+        <input type="text" name="comune" placeholder="Comune" pattern="[A-Za-z\s']+" required><br><br>
+        <input type="text" name="provincia" placeholder="Provincia (sigla 2 lettere)" pattern="[A-Za-z]{2}"
+            required><br><br>
+        <input type="text" name="nickname" placeholder="Nickname" required><br><br>
+        <input type="password" name="password" placeholder="Password (8 caratteri, maiuscola, numero, speciale)"
+            pattern="(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+            title="Almeno una maiuscola, un numero, un carattere speciale e minimo 8 caratteri" required><br><br>
+        <button type="submit">Invia</button>
+    </form>
+</body>
+
+<h1>Descrizione</h1>
+<p>In questo codice, il modulo di registrazione permette all'utente di inserire vari dettagli, come nome, cognome, data
+    di nascita, indirizzo e contatti. Alcuni campi sono obbligatori, mentre altri sono opzionali. I dati inseriti
+    vengono inviati a una pagina PHP (visualizza.php) tramite il metodo POST. I campi sono validati tramite espressioni
+    regolari per garantire che siano nel formato corretto (ad esempio, per la password si richiede una maiuscola, un
+    numero, un carattere speciale e una lunghezza minima di 8 caratteri). Inoltre, il modulo include il controllo per il
+    numero di cellulare (che deve avere 10 cifre) e il CAP (5 cifre).</p>
+
+</html>
