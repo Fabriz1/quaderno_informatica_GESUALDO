@@ -3,15 +3,15 @@ $lines = file("../dati.txt", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES); //m
 
 $bool = true;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    foreach ($lines as $line) {
-        $dati_utente = explode(';', $line, 2);
-        if ($_POST["username_login"] == $dati_utente[0] && $_POST["password_login"] == $dati_utente[1]) {
+    $dati_inseriti=$_POST["username_login"].$_POST["password_login"];
+    foreach ($lines as $line) { 
+        if ($line=$dati_inseriti) {
             echo "login eseguito con successo";
-            $bool=false;
+            $bool = false;
             break;
         }
     }
-    if($bool){
+    if ($bool) {
         echo "credenziali errate";
     }
 }
