@@ -53,6 +53,12 @@
     <a href="login/login.php" class="buttonLogin">Vai al login</a> <br>
     <h2>se non sei membro è il momento di entrare a far parte di questa famiglia!!</h2>
     <a href="singin/registrazione.php" class="buttonSing">Registrati</a> <br>
+    <br><br>
+    <h1>Per provare il login e singin versione session cliccare sui link sottostanti</h1>
+    <a href="login_session/login.php" class="buttonLogin">Vai al login</a> <br>
+    <a href="singin_session/registrazione.php" class="buttonSing">Registrati</a> <br>
+
+
 </body>
 
 </html>
