@@ -18,6 +18,9 @@
     ?>
     <p>Questo codice crea una tabella che mostra i risultati della moltiplicazione di numeri da 1 a 10. Per fare ciò, il ciclo esterno (da 1 a 10) crea le righe della tabella, mentre il ciclo interno (anch'esso da 1 a 10) calcola il prodotto tra i numeri della riga e della colonna. Ogni risultato viene inserito in una cella della tabella.</p>
     <p>Il risultato finale è una tabella 10x10 che mostra tutte le moltiplicazioni tra i numeri da 1 a 10.</p>
+    <br><br>
+    <a href="index.html">Torna alla Home</a>
+
 </body>
 </html>
 

@@ -39,6 +39,8 @@
     <p>Viene poi aggiunto il nome "Paolo" al messaggio di cortesia, creando un saluto completo, e infine viene mostrato
         anche il tipo di browser utilizzato dalla persona che visita la pagina, grazie alla variabile
         `$_SERVER['HTTP_USER_AGENT']`.</p>
+        <br><br>
+        <a href="index.html">Torna alla Home</a>
     </body>
 
     </html>

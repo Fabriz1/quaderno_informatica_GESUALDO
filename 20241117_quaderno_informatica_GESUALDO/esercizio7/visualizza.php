@@ -37,6 +37,9 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         <li><strong>Provincia:</strong> <?= isset($_POST['provincia']) ? $_POST['provincia'] : '' ?></li>
         <li><strong>Nickname:</strong> <?= isset($_POST['nickname']) ? $_POST['nickname'] : '' ?></li>
     </ul>
+    <br><br>
+    <a href="../index.html">Torna alla Home</a>
 </body>
+
 
 </html>

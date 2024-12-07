@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </html>
 
 <br><br>
+<a href="index.html">Torna alla Home</a>
+<br><br>
 <h1>Descrizione</h1>
 
 <p>In questo codice, viene creato un semplice modulo di login che confronta i dati inseriti dall'utente (nome utente e

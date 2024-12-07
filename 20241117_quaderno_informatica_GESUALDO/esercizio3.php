@@ -76,7 +76,8 @@
     <h2>Figura 4: Piramide Decrescente con Stelle Allineate a Destra</h2>
     <p>Il quarto ciclo esterno va da 10 a 0, e simile al caso precedente, si utilizzano gli spazi per allineare le
         stelle a destra mentre la piramide decresce.</p>
-
+       <br><br>
+        <a href="index.html">Torna alla Home</a>
 </body>
 
 </html>

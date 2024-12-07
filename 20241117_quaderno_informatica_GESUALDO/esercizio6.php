@@ -46,6 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 </body>
 <br><br>
+<a href="index.html">Torna alla Home</a>
+<br><br>
 <h1>Descrizione</h1>
 <p>In questo codice HTML, l'utente inserisce un numero da 1 a 10 tramite un menu a tendina. Dopo aver premuto il
     pulsante "Esegui", viene visualizzata una tabella con tre colonne: la prima colonna mostra i numeri da 1 fino al
