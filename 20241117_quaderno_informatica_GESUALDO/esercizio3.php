@@ -2,58 +2,64 @@
 <html>
 <style>
     body {
-        font-family: monospace;
+        font-family: monospace; /* Utilizzo di un font monospace per mantenere allineate le stelle */
     }
 </style>
 
 <body>
     <?php
-    for ($i = 0; $i <= 10; $i++) {
+    // Figura 1: Piramide crescente
+    for ($i = 0; $i <= 10; $i++) { // Il ciclo esterno determina il numero di righe
 
-        for ($b = 0; $b < $i; $b++) {
+        for ($b = 0; $b < $i; $b++) { // Il ciclo interno stampa il numero di stelle per ogni riga
             echo "*";
         }
-        echo "<br>";
-    }
-
-    echo "<br>";
-    echo "<br>";
-    for ($i = 10; $i >= 0; $i--) {
-
-        for ($b = 0; $b < $i; $b++) {
-            echo "*";
-        }
-        echo "<br>";
+        echo "<br>"; // Aggiunge una nuova riga dopo ogni iterazione del ciclo interno
     }
 
     echo "<br>";
     echo "<br>";
 
-    for ($i = 0; $i <= 10; $i++) {
+    // Figura 2: Piramide decrescente
+    for ($i = 10; $i >= 0; $i--) { // Il ciclo esterno parte da 10 e si riduce fino a 0
 
-        for ($b = 0; $b < $i; $b++) {
-            echo '&nbsp;';
-        }
-        for ($b = 0; $b < 10 - $i; $b++) {
+        for ($b = 0; $b < $i; $b++) { // Il ciclo interno stampa il numero di stelle per ogni riga
             echo "*";
         }
-        echo "<br>";
+        echo "<br>"; // Aggiunge una nuova riga dopo ogni iterazione del ciclo interno
     }
+
     echo "<br>";
     echo "<br>";
 
-    for ($i = 10; $i >= 0; $i--) {
+    // Figura 3: Piramide crescente con stelle allineate a destra
+    for ($i = 0; $i <= 10; $i++) { // Il ciclo esterno determina il numero di righe
 
-        for ($b = 0; $b < $i; $b++) {
-            echo '&nbsp;';
+        for ($b = 0; $b < $i; $b++) { // Ciclo per aggiungere spazi prima delle stelle
+            echo '&nbsp;'; // Stampa uno spazio non separabile
         }
-        for ($b = 0; $b < 10 - $i; $b++) {
+        for ($b = 0; $b < 10 - $i; $b++) { // Ciclo per stampare le stelle
             echo "*";
         }
-        echo "<br>";
+        echo "<br>"; // Aggiunge una nuova riga dopo ogni iterazione
     }
 
+    echo "<br>";
+    echo "<br>";
+
+    // Figura 4: Piramide decrescente con stelle allineate a destra
+    for ($i = 10; $i >= 0; $i--) { // Il ciclo esterno parte da 10 e si riduce fino a 0
+
+        for ($b = 0; $b < $i; $b++) { // Ciclo per aggiungere spazi prima delle stelle
+            echo '&nbsp;'; // Stampa uno spazio non separabile
+        }
+        for ($b = 0; $b < 10 - $i; $b++) { // Ciclo per stampare le stelle
+            echo "*";
+        }
+        echo "<br>"; // Aggiunge una nuova riga dopo ogni iterazione
+    }
     ?>
+
     <h1>Descrizione del Codice PHP per la Stampa di Stelle</h1>
 
     <p>Questo codice PHP genera quattro diverse figure di stelle nel browser, utilizzando dei cicli annidati per formare
@@ -77,7 +83,7 @@
     <p>Il quarto ciclo esterno va da 10 a 0, e simile al caso precedente, si utilizzano gli spazi per allineare le
         stelle a destra mentre la piramide decresce.</p>
        <br><br>
-        <a href="index.html">Torna alla Home</a>
+        <a href="index.html">Torna alla Home</a> <!-- Link per tornare alla pagina principale -->
 </body>
 
 </html>
