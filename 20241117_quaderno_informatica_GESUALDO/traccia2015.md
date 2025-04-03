@@ -1,374 +1,389 @@
 
----
+# Community Eventi Live - Svolgimento Prima Parte Esame di Stato 2015
 
-# Esame di Stato di Istruzione Secondaria Superiore – A.S. 2014/2015
-## Seconda Prova Scritta – Indirizzo ITIA, Articolazione INFORMATICA
-## Tema di: INFORMATICA
+## Indice
 
-### PRIMA PARTE
+*   [1. Analisi della Realtà di Riferimento e Soluzione Scelta (Punto 1)](#1-analisi-della-realtà-di-riferimento-e-soluzione-scelta-punto-1)
+*   [2. Schema Concettuale (Diagramma E/R Fornito) (Punto 2)](#2-schema-concettuale-diagramma-er-fornito-punto-2)
+*   [3. Schema Logico (Schema Relazionale) (Punto 3)](#3-schema-logico-schema-relazionale-punto-3)
+*   [4. Definizione SQL di un Sottoinsieme di Relazioni (Punto 4)](#4-definizione-sql-di-un-sottoinsieme-di-relazioni-punto-4)
+*   [5. Interrogazioni SQL (Punto 5)](#5-interrogazioni-sql-punto-5)
+*   [6. Progetto Interfaccia Web (Punto 6 della traccia)](#6-progetto-interfaccia-web-punto-6-della-traccia)
+*   [7. Codifica Applicazione Web (Punto 7 della traccia)](#7-codifica-applicazione-web-punto-7-della-traccia)
+*   [Come importare e collegare il Database](#come-importare-e-collegare-il-database)
+*   [Setup del Database](#setup-del-database)
+    *   [Metodo 1: Installazione di XAMPP (Consigliato)](#metodo-1-installazione-di-xampp-consigliato)
+    *   [Metodo 2: Esecuzione Manuale delle Query (Se non usi XAMPP/phpMyAdmin)](#metodo-2-esecuzione-manuale-delle-query-se-non-usi-xamppphpmyadmin)
+*   [Connessione tra PHP e Database (con XAMPP)](#connessione-tra-php-e-database-con-xampp)
+*   [Avvio dell'Applicazione](#avvio-dellapplicazione)
 
-Il candidato affronta la prima parte della prova, che richiede la progettazione di una base di dati e l'analisi di un sistema per una web community dedicata alla condivisione di informazioni su eventi dal vivo in Italia.
+## 1. Analisi della Realtà di Riferimento e Soluzione Scelta (Punto 1)
 
-**1. Analisi della Realtà di Riferimento e Scelta della Soluzione**
+**Realtà di Riferimento:**
+Si richiede di progettare il sistema informativo per una web community dedicata alla condivisione di dati e commenti su eventi dal vivo (concerti, teatro, balletti, ecc.) che si svolgono in Italia.
 
-La traccia richiede la realizzazione di una piattaforma web (community) che permetta a utenti registrati (membri) di condividere informazioni (dati e commenti) su eventi dal vivo (concerti, spettacoli teatrali, balletti, ecc.) che si svolgono in Italia.
+*   **Funzionalità Principali:**
+    *   **Registrazione Utenti:** I membri si registrano fornendo nickname, nome, cognome, email e selezionano categorie di eventi di interesse.
+    *   **Inserimento Eventi:** I membri registrati possono inserire nuovi eventi, specificando categoria, luogo, data, titolo e artisti.
+    *   **Interazione (Post):** I membri registrati possono scrivere post associati a un evento, contenenti un commento e un voto (da 1 a 5).
+    *   **Consultazione (Utenti Anonimi e Registrati):** Tutti possono visualizzare gli eventi (filtrabili per tipo/categoria e provincia, ordinati cronologicamente) e i post (commenti e voti) associati a un evento.
+    *   **Newsletter:** I membri ricevono automaticamente una newsletter settimanale via email con gli eventi futuri (settimana seguente) relativi alle categorie scelte e che si svolgono nella loro provincia.
 
-**Funzionalità Principali Identificate:**
+**Schema E/R Fornito:** La base dati sarà sviluppata partendo dallo schema E/R fornito, con entità `UTENTE`, `EVENTO`, `POST` e la relazione `CREA` tra `UTENTE` ed `EVENTO`. I collegamenti tra `POST` e le altre entità indicano le dipendenze funzionali.
 
-*   **Registrazione Membri:** Gli utenti possono diventare membri fornendo nickname, nome, cognome, email e selezionando una o più categorie di eventi di interesse.
-*   **Inserimento Eventi:** I membri possono inserire nuovi eventi specificando categoria, luogo, data, titolo e artisti coinvolti.
-*   **Interazione (Commenti e Voti):** I membri possono scrivere post (commenti) e assegnare un voto (da 1 a 5) a eventi specifici.
-*   **Consultazione:** Tutti gli utenti (registrati e anonimi) possono visualizzare gli eventi per tipo (categoria), in ordine cronologico, con possibilità di filtrare per provincia. Possono anche visualizzare commenti e voti associati a un evento.
-*   **Newsletter:** Ogni membro riceve automaticamente una newsletter settimanale via email con gli eventi delle sue categorie di interesse che si svolgeranno nella settimana successiva nella sua provincia.
+**Gestione Elementi non Espliciti nell'E/R:**
+Come indicato nella traccia ("fatte le opportune ipotesi aggiuntive"), elementi come le categorie e la provincia, non presenti come entità separate nell'E/R fornito, verranno gestiti come attributi:
+*   **Categorie:** Attributo `NomeCategoria` in `EVENTO` e attributo `CategorieInteresse` in `UTENTE`.
+*   **Provincia:** Derivata dall'attributo `LuogoSvolgimento` in `EVENTO` e gestita tramite un attributo `ProvinciaUtente` in `UTENTE` per la newsletter.
 
-**Ipotesi Aggiuntive:**
 
-Per procedere con la progettazione, il candidato formula le seguenti ipotesi aggiuntive:
 
-*   **Gestione Utenti:** Si assume che il `nickname` debba essere univoco all'interno della community per identificare i membri in modo distintivo, oltre all'email che sarà usata anche per il login e le comunicazioni (newsletter). Sarà necessaria una password per l'accesso.
-*   **Categorie:** Si ipotizza l'esistenza di un insieme predefinito di categorie di eventi gestibili dal sistema (es. 'Concerti', 'Teatro', 'Danza', 'Festival', 'Mostre'). Un evento appartiene ad una sola categoria principale per semplicità di classificazione e gestione della newsletter, anche se la traccia menziona "diverse categorie". L'interesse del membro può invece riguardare più categorie.
-*   **Luogo Svolgimento:** L'attributo `luogo di svolgimento` dell'evento sarà strutturato per contenere informazioni sufficienti a identificare la `provincia`, necessaria per i filtri di ricerca e per la newsletter. Si ipotizza di memorizzare almeno `Città` e `Provincia` (es. sigla 'MI', 'RM'). Si assume che la `Provincia` dell'utente, necessaria per la newsletter, venga richiesta durante la registrazione o dedotta da altre informazioni (es. un campo 'Provincia di residenza').
-*   **Voto:** Il voto è un numero intero compreso tra 1 e 5.
-*   **Newsletter:** La generazione e l'invio della newsletter sono processi automatici gestiti dal sistema (es. tramite uno script schedulato) che interroga il database per trovare gli eventi rilevanti per ciascun utente.
-*   **Unicità Commenti:** Si assume che un membro possa scrivere un solo commento/voto per un determinato evento.
+**Scelta Motivata:**
+Si sceglie la **Soluzione 1 (Database Relazionale + Applicazione Web Server-Side)**.
+*   **Motivazioni:** La natura dei dati è relazionale; le query richieste beneficiano di SQL; l'integrità referenziale è gestita nativamente; è una soluzione standard e didatticamente adeguata; la complessità iniziale non giustifica approcci più complessi (NoSQL, Microservizi).
 
-**Soluzioni Possibili e Scelta:**
+## 2. Schema Concettuale (Diagramma E/R Fornito) (Punto 2)
 
-Si potrebbero considerare diverse architetture (es. microservizi), ma data la natura integrata delle funzionalità e il contesto di un esame di stato per un istituto tecnico, la soluzione più idonea e didatticamente appropriata appare essere un'**applicazione web monolitica** basata su un'architettura standard a 3 livelli (presentazione, logica applicativa, dati).
+Il diagramma E/R fornito dal candidato è il seguente:
+*![Diagramma E/R Fornito](PXL_20250331_173249342.jpg "Diagramma E/R Utente-Evento-Post")*
 
-*   **Livello Dati:** Un **database relazionale** (es. MySQL, PostgreSQL) è la scelta più naturale per gestire dati strutturati come utenti, eventi, categorie e le loro relazioni, garantendo integrità e consistenza.
-*   **Livello Logica Applicativa:** Un linguaggio server-side (es. PHP, Python/Django, Java/Spring) gestirà le richieste HTTP, l'autenticazione, la logica di business (inserimento dati, generazione newsletter, calcolo medie voti) e l'interazione con il database.
-*   **Livello Presentazione:** HTML, CSS e JavaScript verranno utilizzati per creare l'interfaccia utente web, fruibile tramite browser.
+**Entità Principali:**
+*   `UTENTE`: Rappresenta i membri registrati alla community.
+*   `EVENTO`: Rappresenta gli eventi dal vivo inseriti nel sistema.
+*   `POST`: Rappresenta i commenti e i voti lasciati dagli utenti sugli eventi.
 
-**Motivazione della Scelta:**
-Questa soluzione è la più collaudata per applicazioni di questo tipo, permette uno sviluppo relativamente rapido, gestisce bene le transazioni e le relazioni tra i dati, ed è in linea con le competenze tipicamente acquisite nel percorso di studi ITIA. Il modello relazionale si adatta bene alla struttura dei dati descritta.
+**Relazioni Principali (interpretate dallo schema):**
+*   **CREA (Utente - Evento):** Molti-a-uno (da Evento a Utente). Un utente crea molti eventi, un evento è creato da un solo utente.
+*   **Collegamento Utente - Post:** Molti-a-uno (da Post a Utente). Un post è scritto da un utente.
+*   **Collegamento Evento - Post:** Molti-a-uno (da Post a Evento). Un post si riferisce a un evento.
 
-**2. Schema Concettuale della Base di Dati (Diagramma E/R)**
+**Cardinalità dedotte:**
+*   `UTENTE` (0,N) --- CREA --- (1,1) `EVENTO`
+*   `UTENTE` (0,N) --- (Scrive) --- (1,1) `POST`
+*   `EVENTO` (0,N) --- (Riguarda) --- (1,1) `POST`
 
-Basandosi sull'analisi e le ipotesi, si definiscono le seguenti entità e relazioni:
+## 3. Schema Logico (Schema Relazionale) (Punto 3)
 
-*   **Entità:**
-    *   `MEMBRO`: Rappresenta un utente registrato alla community.
-    *   `CATEGORIA`: Rappresenta una tipologia di evento (es. Concerto, Teatro).
-    *   `EVENTO`: Rappresenta un evento dal vivo specifico.
-    *   `COMMENTO`: Rappresenta un post (commento e voto) lasciato da un membro su un evento.
-*   **Relazioni:**
-    *   `INTERESSE` (tra `MEMBRO` e `CATEGORIA`): Un membro può essere interessato a più categorie, e una categoria può interessare più membri (N a N).
-    *   `INSERIMENTO` (tra `MEMBRO` e `EVENTO`): Un membro inserisce uno o più eventi, ma un evento è inserito da un solo membro (1 a N).
-    *   `APPARTENENZA` (tra `EVENTO` e `CATEGORIA`): Un evento appartiene ad una sola categoria, mentre una categoria può raggruppare molti eventi (N a 1).
-    *   `PUBBLICAZIONE` (tra `MEMBRO` e `COMMENTO`): Un membro scrive uno o più commenti, ma un commento è scritto da un solo membro (1 a N).
-    *   `RIFERIMENTO` (tra `COMMENTO` e `EVENTO`): Un commento si riferisce ad un solo evento, ma un evento può avere molti commenti (N a 1).
+La traduzione dello schema E/R nel modello logico relazionale porta alle seguenti tabelle:
 
-**Diagramma E/R (Descrizione testuale e Mermaid):**
+*   **UTENTE** (`ID_Utente` PK, Nickname UNIQUE, Nome, Cognome, Email UNIQUE, PasswordHash, CategorieInteresse, ProvinciaUtente)
+*   **EVENTO** (`ID_Evento` PK, `ID_Utente_Creatore` FK -> UTENTE, NomeCategoria, LuogoSvolgimento, DataEvento, Titolo, ArtistiCoinvolti)
+*   **POST** (`ID_Post` PK, `ID_Utente_Autore` FK -> UTENTE, `ID_Evento_Riferimento` FK -> EVENTO, Commento, Voto, DataOraPost)
 
-*   **MEMBRO** (<u>ID_Membro</u> PK, Nickname UNIQUE, Nome, Cognome, Email UNIQUE, PasswordHash, ProvinciaResidenza)
-*   **CATEGORIA** (<u>ID_Categoria</u> PK, NomeCategoria UNIQUE)
-*   **EVENTO** (<u>ID_Evento</u> PK, Titolo, LuogoSvolgimento, Provincia, DataOraSvolgimento, ArtistiCoinvolti, ID_MembroInseritore FK, ID_Categoria FK)
-*   **COMMENTO** (<u>ID_Commento</u> PK, Testo, Voto (1-5), DataOraPubblicazione, ID_MembroAutore FK, ID_EventoRiferito FK)
-*   **INTERESSE** (<u>ID_Membro</u> FK, <u>ID_Categoria</u> FK) - Tabella associativa per la relazione N:N tra MEMBRO e CATEGORIA.
+**Descrizione Attributi Dettagliata:**
 
-```mermaid
-erDiagram
-    MEMBRO ||--o{ EVENTO : INSERISCE
-    MEMBRO ||--o{ COMMENTO : PUBBLICA
-    MEMBRO ||--|{ INTERESSE : HA
-    CATEGORIA ||--|{ INTERESSE : RIGUARDA
-    CATEGORIA ||--o{ EVENTO : RAGGRUPPA
-    EVENTO ||--|{ COMMENTO : RICEVE
+**Tabella: UTENTE**
 
-    MEMBRO {
-        INT ID_Membro PK
-        VARCHAR Nickname UK
-        VARCHAR Nome
-        VARCHAR Cognome
-        VARCHAR Email UK
-        VARCHAR PasswordHash
-        VARCHAR ProvinciaResidenza "Es: 'MI'"
-    }
-    CATEGORIA {
-        INT ID_Categoria PK
-        VARCHAR NomeCategoria UK
-    }
-    EVENTO {
-        INT ID_Evento PK
-        VARCHAR Titolo
-        VARCHAR LuogoSvolgimento "Es: 'Teatro alla Scala, Milano'"
-        VARCHAR Provincia "Es: 'MI'"
-        DATETIME DataOraSvolgimento
-        TEXT ArtistiCoinvolti
-        INT ID_MembroInseritore FK
-        INT ID_Categoria FK
-    }
-    COMMENTO {
-        INT ID_Commento PK
-        TEXT Testo NULL
-        TINYINT Voto "CHECK(Voto BETWEEN 1 AND 5)"
-        DATETIME DataOraPubblicazione
-        INT ID_MembroAutore FK
-        INT ID_EventoRiferito FK
-    }
-    INTERESSE {
-        INT ID_Membro FK
-        INT ID_Categoria FK
-    }
+| Nome Attributo      | Descrizione                                     | Tipo         | Vincoli                                  |
+| :------------------ | :---------------------------------------------- | :----------- | :--------------------------------------- |
+| ID_Utente           | Identificativo univoco utente (membro)          | INT          | PK, AUTO_INCREMENT                       |
+| Nickname            | Nickname scelto dall'utente                     | VARCHAR(50)  | NOT NULL, UNIQUE                         |
+| Nome                | Nome reale dell'utente                          | VARCHAR(50)  | NOT NULL                                 |
+| Cognome             | Cognome reale dell'utente                       | VARCHAR(50)  | NOT NULL                                 |
+| Email               | Indirizzo email (per login/newsletter)          | VARCHAR(100) | NOT NULL, UNIQUE                         |
+| PasswordHash        | Hash della password per l'accesso               | VARCHAR(255) | NOT NULL                                 |
+| CategorieInteresse  | Categorie di interesse (es. "Concerti,Teatro")  | VARCHAR(255) | NULL                                     |
+| ProvinciaUtente     | Provincia di residenza/interesse per newsletter | VARCHAR(50)  | NOT NULL                                 |
 
-```
-*Nota: Le chiavi primarie (PK), uniche (UK) e esterne (FK) sono indicate. Il campo `Testo` in `COMMENTO` è `NULL` perché un membro potrebbe voler lasciare solo un voto.*
+**Tabella: EVENTO**
 
-**3. Espressione delle Cardinalità**
+| Nome Attributo       | Descrizione                             | Tipo         | Vincoli                                      |
+| :------------------- | :-------------------------------------- | :----------- | :------------------------------------------- |
+| ID_Evento            | Identificativo univoco evento           | INT          | PK, AUTO_INCREMENT                           |
+| ID_Utente_Creatore   | Utente che ha inserito l'evento (FK)    | INT          | NOT NULL, FK -> UTENTE(ID_Utente)            |
+| NomeCategoria        | Categoria dell'evento (es. "Concerto")  | VARCHAR(50)  | NOT NULL                                     |
+| LuogoSvolgimento     | Descrizione luogo (es. "Teatro Verdi, FI")| VARCHAR(150) | NOT NULL                                     |
+| DataEvento           | Data e ora dell'evento                  | DATETIME     | NOT NULL                                     |
+| Titolo               | Titolo dell'evento                      | VARCHAR(100) | NOT NULL                                     |
+| ArtistiCoinvolti     | Artisti/gruppi partecipanti             | TEXT         | NULL                                         |
 
-Le cardinalità (min, max) per le relazioni identificate sono:
+**Tabella: POST**
 
-*   `MEMBRO` (0,N) --- HA --- (0,N) `INTERESSE` --- RIGUARDA --- (0,N) `CATEGORIA`
-    *   Un membro può non avere interessi o averne molti (0,N). Una categoria può non interessare nessuno o interessare molti (0,N).
-*   `MEMBRO` (1,1) --- INSERISCE --- (0,N) `EVENTO`
-    *   Un evento DEVE essere inserito da UN SOLO membro (1,1 lato MEMBRO). Un membro PUÒ non inserire eventi o inserirne molti (0,N lato EVENTO).
-*   `EVENTO` (1,1) --- APPARTIENE --- (0,N) `CATEGORIA`
-    *   Un evento DEVE appartenere ad UNA SOLA categoria (1,1 lato CATEGORIA). Una categoria PUÒ non avere eventi o averne molti (0,N lato EVENTO).
-*   `MEMBRO` (1,1) --- PUBBLICA --- (0,N) `COMMENTO`
-    *   Un commento DEVE essere pubblicato da UN SOLO membro (1,1 lato MEMBRO). Un membro PUÒ non pubblicare commenti o pubblicarne molti (0,N lato COMMENTO).
-*   `COMMENTO` (1,1) --- SI_RIFERISCE --- (0,N) `EVENTO`
-    *   Un commento DEVE riferirsi ad UN SOLO evento (1,1 lato EVENTO). Un evento PUÒ non avere commenti o averne molti (0,N lato COMMENTO).
+| Nome Attributo         | Descrizione                              | Tipo        | Vincoli                                      |
+| :--------------------- | :--------------------------------------- | :---------- | :------------------------------------------- |
+| ID_Post                | Identificativo univoco post              | INT         | PK, AUTO_INCREMENT                           |
+| ID_Utente_Autore       | Utente che ha scritto il post (FK)       | INT         | NOT NULL, FK -> UTENTE(ID_Utente)            |
+| ID_Evento_Riferimento| Evento a cui si riferisce il post (FK)   | INT         | NOT NULL, FK -> EVENTO(ID_Evento)            |
+| Commento               | Testo del commento                       | TEXT        | NULL                                         |
+| Voto                   | Voto numerico assegnato                  | INT         | NOT NULL, CHECK (Voto BETWEEN 1 AND 5)       |
+| DataOraPost            | Timestamp di inserimento del post        | DATETIME    | NOT NULL, DEFAULT CURRENT_TIMESTAMP          |
 
-**4. Schema Logico della Base di Dati (Relazionale)**
+## 4. Definizione SQL di un Sottoinsieme di Relazioni (Punto 4)
 
-Traducendo lo schema E/R nel modello logico relazionale, si ottengono le seguenti tabelle:
-
-*   **MEMBRO** (
-    `ID_Membro` INT PRIMARY KEY AUTO_INCREMENT,
-    `Nickname` VARCHAR(50) NOT NULL UNIQUE,
-    `Nome` VARCHAR(100) NOT NULL,
-    `Cognome` VARCHAR(100) NOT NULL,
-    `Email` VARCHAR(100) NOT NULL UNIQUE,
-    `PasswordHash` VARCHAR(255) NOT NULL,
-    `ProvinciaResidenza` VARCHAR(2) NOT NULL COMMENT 'Sigla provincia, es. MI'
-    )
-
-*   **CATEGORIA** (
-    `ID_Categoria` INT PRIMARY KEY AUTO_INCREMENT,
-    `NomeCategoria` VARCHAR(100) NOT NULL UNIQUE
-    )
-
-*   **EVENTO** (
-    `ID_Evento` INT PRIMARY KEY AUTO_INCREMENT,
-    `Titolo` VARCHAR(200) NOT NULL,
-    `LuogoSvolgimento` VARCHAR(255) NOT NULL,
-    `Provincia` VARCHAR(2) NOT NULL COMMENT 'Sigla provincia, es. MI',
-    `DataOraSvolgimento` DATETIME NOT NULL,
-    `ArtistiCoinvolti` TEXT NULL,
-    `ID_MembroInseritore` INT NOT NULL,
-    `ID_Categoria` INT NOT NULL,
-    FOREIGN KEY (`ID_MembroInseritore`) REFERENCES `MEMBRO`(`ID_Membro`) ON DELETE RESTRICT,
-    FOREIGN KEY (`ID_Categoria`) REFERENCES `CATEGORIA`(`ID_Categoria`) ON DELETE RESTRICT
-    )
-
-*   **COMMENTO** (
-    `ID_Commento` INT PRIMARY KEY AUTO_INCREMENT,
-    `Testo` TEXT NULL,
-    `Voto` TINYINT NOT NULL CHECK (`Voto` BETWEEN 1 AND 5),
-    `DataOraPubblicazione` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `ID_MembroAutore` INT NOT NULL,
-    `ID_EventoRiferito` INT NOT NULL,
-    FOREIGN KEY (`ID_MembroAutore`) REFERENCES `MEMBRO`(`ID_Membro`) ON DELETE CASCADE,
-    FOREIGN KEY (`ID_EventoRiferito`) REFERENCES `EVENTO`(`ID_Evento`) ON DELETE CASCADE,
-    UNIQUE (`ID_MembroAutore`, `ID_EventoRiferito`) COMMENT 'Un membro può commentare/votare un evento una sola volta'
-    )
-
-*   **INTERESSE_MEMBRO_CATEGORIA** (
-    `ID_Membro` INT NOT NULL,
-    `ID_Categoria` INT NOT NULL,
-    PRIMARY KEY (`ID_Membro`, `ID_Categoria`),
-    FOREIGN KEY (`ID_Membro`) REFERENCES `MEMBRO`(`ID_Membro`) ON DELETE CASCADE,
-    FOREIGN KEY (`ID_Categoria`) REFERENCES `CATEGORIA`(`ID_Categoria`) ON DELETE CASCADE
-    )
-
-*Nota: Sono stati specificati tipi di dato comuni (INT, VARCHAR, TEXT, DATETIME, TINYINT), chiavi primarie (PK), chiavi esterne (FK) con vincoli di integrità referenziale (`ON DELETE`), vincoli di unicità (`UNIQUE`), vincoli `NOT NULL` e un vincolo di dominio (`CHECK`). `AUTO_INCREMENT` è usato per le PK numeriche.*
-
-**5. Definizione SQL di un Sottoinsieme delle Relazioni (DDL)**
-
-Si riporta il codice SQL DDL per creare le tabelle `MEMBRO`, `EVENTO` e `COMMENTO`, che includono diversi tipi di vincoli richiesti.
+Definizione SQL DDL per le tabelle `UTENTE`, `EVENTO` e `POST`, includendo vincoli di integrità referenziale e di dominio.
 
 ```sql
--- Tabella per i membri registrati della community
-CREATE TABLE MEMBRO (
-    ID_Membro INT AUTO_INCREMENT PRIMARY KEY,
+-- Tabella UTENTE
+CREATE TABLE UTENTE (
+    ID_Utente INT AUTO_INCREMENT PRIMARY KEY,
     Nickname VARCHAR(50) NOT NULL UNIQUE,
-    Nome VARCHAR(100) NOT NULL,
-    Cognome VARCHAR(100) NOT NULL,
+    Nome VARCHAR(50) NOT NULL,
+    Cognome VARCHAR(50) NOT NULL,
     Email VARCHAR(100) NOT NULL UNIQUE,
-    PasswordHash VARCHAR(255) NOT NULL COMMENT 'Hash della password per sicurezza',
-    ProvinciaResidenza VARCHAR(2) NOT NULL COMMENT 'Sigla provincia, es. MI, per newsletter'
-) ENGINE=InnoDB;
+    PasswordHash VARCHAR(255) NOT NULL,
+    CategorieInteresse VARCHAR(255),
+    ProvinciaUtente VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabella per le categorie degli eventi
-CREATE TABLE CATEGORIA (
-    ID_Categoria INT AUTO_INCREMENT PRIMARY KEY,
-    NomeCategoria VARCHAR(100) NOT NULL UNIQUE
-) ENGINE=InnoDB;
-
--- Tabella per gli eventi inseriti dai membri
+-- Tabella EVENTO
 CREATE TABLE EVENTO (
     ID_Evento INT AUTO_INCREMENT PRIMARY KEY,
-    Titolo VARCHAR(200) NOT NULL,
-    LuogoSvolgimento VARCHAR(255) NOT NULL COMMENT 'Descrizione del luogo, es. via, città',
-    Provincia VARCHAR(2) NOT NULL COMMENT 'Sigla provincia, es. RM, per filtri e newsletter',
-    DataOraSvolgimento DATETIME NOT NULL,
-    ArtistiCoinvolti TEXT NULL COMMENT 'Elenco artisti o descrizione',
-    ID_MembroInseritore INT NOT NULL,
-    ID_Categoria INT NOT NULL,
-
-    INDEX idx_evento_data (DataOraSvolgimento), -- Indice per ricerche temporali
-    INDEX idx_evento_provincia (Provincia),   -- Indice per filtri geografici
-
-    CONSTRAINT fk_evento_membro
-        FOREIGN KEY (ID_MembroInseritore) REFERENCES MEMBRO(ID_Membro)
-        ON DELETE RESTRICT -- Impedisce la cancellazione di un membro se ha inserito eventi
-        ON UPDATE CASCADE, -- Se ID_Membro cambia (improbabile), aggiorna qui
-
-    CONSTRAINT fk_evento_categoria
-        FOREIGN KEY (ID_Categoria) REFERENCES CATEGORIA(ID_Categoria)
-        ON DELETE RESTRICT -- Impedisce la cancellazione di una categoria se usata da eventi
-        ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
--- Tabella per i commenti e i voti lasciati dai membri sugli eventi
-CREATE TABLE COMMENTO (
-    ID_Commento INT AUTO_INCREMENT PRIMARY KEY,
-    Testo TEXT NULL COMMENT 'Commento testuale facoltativo',
-    Voto TINYINT NOT NULL COMMENT 'Voto numerico obbligatorio da 1 a 5',
-    DataOraPubblicazione DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ID_MembroAutore INT NOT NULL,
-    ID_EventoRiferito INT NOT NULL,
-
-    INDEX idx_commento_evento (ID_EventoRiferito), -- Indice per recuperare commenti di un evento
-
-    CONSTRAINT fk_commento_membro
-        FOREIGN KEY (ID_MembroAutore) REFERENCES MEMBRO(ID_Membro)
-        ON DELETE CASCADE -- Se un membro è cancellato, i suoi commenti vengono rimossi
+    ID_Utente_Creatore INT NOT NULL,
+    NomeCategoria VARCHAR(50) NOT NULL,
+    LuogoSvolgimento VARCHAR(150) NOT NULL,
+    DataEvento DATETIME NOT NULL,
+    Titolo VARCHAR(100) NOT NULL,
+    ArtistiCoinvolti TEXT NULL,
+    CONSTRAINT fk_evento_utente
+        FOREIGN KEY (ID_Utente_Creatore) REFERENCES UTENTE(ID_Utente)
+        ON DELETE RESTRICT
         ON UPDATE CASCADE,
+    INDEX idx_evento_data (DataEvento),
+    INDEX idx_evento_categoria (NomeCategoria),
+    INDEX idx_evento_luogo (LuogoSvolgimento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-    CONSTRAINT fk_commento_evento
-        FOREIGN KEY (ID_EventoRiferito) REFERENCES EVENTO(ID_Evento)
-        ON DELETE CASCADE -- Se un evento è cancellato, i suoi commenti vengono rimossi
+-- Tabella POST
+CREATE TABLE POST (
+    ID_Post INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utente_Autore INT NOT NULL,
+    ID_Evento_Riferimento INT NOT NULL,
+    Commento TEXT,
+    Voto INT NOT NULL,
+    DataOraPost DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_voto CHECK (Voto BETWEEN 1 AND 5),
+    CONSTRAINT fk_post_utente
+        FOREIGN KEY (ID_Utente_Autore) REFERENCES UTENTE(ID_Utente)
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
-
-    CONSTRAINT chk_voto_range -- Vincolo di Dominio
-        CHECK (Voto BETWEEN 1 AND 5),
-
-    CONSTRAINT uq_membro_evento_commento -- Vincolo di Unicità
-        UNIQUE (ID_MembroAutore, ID_EventoRiferito) -- Un membro commenta/vota un evento solo una volta
-) ENGINE=InnoDB;
-
--- Nota: Si è scelto InnoDB come motore di storage per MySQL per il supporto a
---       transazioni e vincoli di integrità referenziale.
---       Sono stati aggiunti indici per ottimizzare le query più frequenti.
---       Le clausole ON DELETE sono state scelte con logica: RESTRICT per dati
---       strutturali (categorie, membri inseritori), CASCADE per dati dipendenti
---       (commenti, interessi).
+    CONSTRAINT fk_post_evento
+        FOREIGN KEY (ID_Evento_Riferimento) REFERENCES EVENTO(ID_Evento)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    INDEX idx_post_evento (ID_Evento_Riferimento),
+    INDEX idx_post_utente (ID_Utente_Autore)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-**6. Interrogazioni SQL (Punto 5 della traccia)**
+## 5. Interrogazioni SQL (Punto 5)
 
-Si forniscono le query SQL richieste:
-
-**a. Elenco degli eventi già svolti, in ordine alfabetico di provincia**
+Interrogazioni SQL richieste dalla traccia.
 
 ```sql
+-- a. Elenco degli eventi già svolti, in ordine alfabetico di provincia
+--    (Ipotizzando estrazione da LuogoSvolgimento, es. formato "Luogo, Città, PR")
 SELECT
-    E.ID_Evento,
-    E.Titolo,
-    E.LuogoSvolgimento,
-    E.Provincia,
-    E.DataOraSvolgimento,
-    C.NomeCategoria
-FROM
-    EVENTO AS E
-JOIN
-    CATEGORIA AS C ON E.ID_Categoria = C.ID_Categoria
-WHERE
-    E.DataOraSvolgimento < NOW() -- Filtra per eventi passati
-ORDER BY
-    E.Provincia ASC, -- Ordina per provincia (alfabetico)
-    E.DataOraSvolgimento DESC; -- Ordine secondario (opzionale, dal più recente passato)
+    E.Titolo, E.DataEvento, E.LuogoSvolgimento,
+    TRIM(SUBSTRING_INDEX(E.LuogoSvolgimento, ',', -1)) AS Provincia
+FROM EVENTO E WHERE E.DataEvento < NOW() ORDER BY Provincia ASC, E.DataEvento DESC;
+
+-- b. Elenco dei membri che non hanno mai inserito un commento (post)
+SELECT U.ID_Utente, U.Nickname, U.Nome, U.Cognome, U.Email
+FROM UTENTE U LEFT JOIN POST P ON U.ID_Utente = P.ID_Utente_Autore
+WHERE P.ID_Post IS NULL ORDER BY U.Cognome, U.Nome;
+
+-- c. Per ogni evento il voto medio ottenuto in ordine di categoria e titolo
+SELECT E.NomeCategoria, E.Titolo, E.ID_Evento, AVG(P.Voto) AS VotoMedio
+FROM EVENTO E LEFT JOIN POST P ON E.ID_Evento = P.ID_Evento_Riferimento
+GROUP BY E.ID_Evento ORDER BY E.NomeCategoria ASC, E.Titolo ASC;
+
+-- d. I dati dell'utente che ha registrato (creato) il maggior numero di eventi
+SELECT U.ID_Utente, U.Nickname, U.Nome, U.Cognome, U.Email, COUNT(E.ID_Evento) AS NumeroEventiCreati
+FROM UTENTE U JOIN EVENTO E ON U.ID_Utente = E.ID_Utente_Creatore
+GROUP BY U.ID_Utente ORDER BY NumeroEventiCreati DESC LIMIT 1;
 ```
 
-**b. Elenco dei membri che non hanno mai inserito un commento**
+## 6. Progetto Interfaccia Web (Punto 6 della traccia)
+
+**Descrizione Concettuale:**
+Si progetta una pagina web dinamica (es. `dashboard_utente.php`), accessibile agli utenti registrati dopo il login. Questa pagina servirà come pannello di controllo e includerà:
+
+*   **Form di Inserimento Evento:** Una sezione contenente un form HTML per l'inserimento dei dati di un nuovo evento (Categoria, Luogo, Data/Ora, Titolo, Artisti). Il form invierà i dati a uno script server-side per l'elaborazione. Saranno implementate validazioni lato client e server.
+*   **Form di Inserimento Post:** Una sezione che permette di cercare o selezionare un evento esistente e presentare un form HTML per scrivere un commento e assegnare un voto (1-5) a quell'evento. L'ID dell'evento e il contenuto del post verranno inviati a uno script server-side.
+*   **Navigazione Utente:** Link o sezioni per visualizzare gli eventi/post propri e per modificare il profilo utente.
+
+L'interfaccia sarà realizzata con HTML per la struttura e CSS per lo stile, puntando a chiarezza e usabilità.
+
+## 7. Codifica Applicazione Web (Punto 7 della traccia)
+
+**Descrizione Concettuale dello Script Server-Side (es. `gestisci_evento.php` in PHP):**
+
+Lo script per gestire l'inserimento di un nuovo evento eseguirà i seguenti passi logici:
+
+1.  **Controllo Sessione/Autenticazione:** Verifica che l'utente sia loggato e recupera il suo ID.
+2.  **Ricezione e Validazione Dati:** Riceve i dati dal form (metodo POST), li sanifica per sicurezza (contro XSS, ecc.) e li valida (campi obbligatori, formato data, ecc.).
+3.  **Connessione al Database:** Stabilisce una connessione sicura al database MySQL (es. tramite PDO).
+4.  **Preparazione ed Esecuzione Query:** Prepara un'istruzione SQL `INSERT` usando prepared statements (contro SQL injection), associa i dati validati ai placeholder (incluso l'ID dell'utente creatore) ed esegue la query.
+5.  **Gestione Risultato:** Verifica l'esito dell'inserimento e fornisce un feedback all'utente (messaggio di successo o errore). In caso di successo, può reindirizzare l'utente.
+6.  **Chiusura Connessione:** Termina la connessione al database.
+
+## Come importare e collegare il Database
+
+Per far funzionare questo progetto in locale, avrai bisogno di:
+
+1.  **XAMPP:** Un ambiente di sviluppo locale che include Apache (web server), MariaDB/MySQL (database) e PHP.
+    *   Puoi scaricarlo da [https://www.apachefriends.org/it/index.html](https://www.apachefriends.org/it/index.html)
+
+## Setup del Database
+
+Ci sono due modi principali per configurare il database necessario.
+
+### Metodo 1: Installazione di XAMPP (Consigliato)
+
+1.  **Installa XAMPP:** Scarica e installa XAMPP seguendo le istruzioni per il tuo sistema operativo.
+2.  **Avvia XAMPP:** Apri il Pannello di Controllo di XAMPP (XAMPP Control Panel).
+3.  **Avvia i Moduli:** Avvia i moduli **Apache** e **MySQL** cliccando sui rispettivi pulsanti "Start".
+4.  **Crea il Database:**
+    *   Apri il tuo browser web e vai a `http://localhost/phpmyadmin`.
+    *   Clicca su "Nuovo" (o "New") nel menu a sinistra.
+    *   Inserisci un nome per il database. **Importante:** Usa il nome `202425_5ib_gesualdo_carpoolingdb` (o un altro nome coerente con i file PHP, se modificato). Scegli `utf8mb4_general_ci` come codifica (collation).
+    *   Clicca su "Crea" (o "Create").
+5.  **Importa la Struttura:**
+    *   Una volta creato il database, selezionalo dal menu a sinistra.
+    *   Vai alla scheda "SQL" in alto.
+    *   Copia **tutto** il blocco di codice SQL qui sotto (relativo alle tabelle `UTENTE`, `EVENTO`, `POST`).
+    *   Incolla il codice nella grande casella di testo della scheda "SQL".
+    *   Clicca sul pulsante "Esegui" (o "Go") in basso a destra.
+    *   Se tutto va bene, vedrai un messaggio di successo e le tabelle appariranno nel menu a sinistra sotto il nome del tuo database.
 
 ```sql
-SELECT
-    M.ID_Membro,
-    M.Nickname,
-    M.Nome,
-    M.Cognome,
-    M.Email
-FROM
-    MEMBRO AS M
-LEFT JOIN
-    COMMENTO AS CO ON M.ID_Membro = CO.ID_MembroAutore
-WHERE
-    CO.ID_Commento IS NULL; -- Seleziona solo i membri per cui la JOIN non ha trovato corrispondenze
+-- Tabella UTENTE
+CREATE TABLE UTENTE (
+    ID_Utente INT AUTO_INCREMENT PRIMARY KEY,
+    Nickname VARCHAR(50) NOT NULL UNIQUE,
+    Nome VARCHAR(50) NOT NULL,
+    Cognome VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    CategorieInteresse VARCHAR(255),
+    ProvinciaUtente VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabella EVENTO
+CREATE TABLE EVENTO (
+    ID_Evento INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utente_Creatore INT NOT NULL,
+    NomeCategoria VARCHAR(50) NOT NULL,
+    LuogoSvolgimento VARCHAR(150) NOT NULL,
+    DataEvento DATETIME NOT NULL,
+    Titolo VARCHAR(100) NOT NULL,
+    ArtistiCoinvolti TEXT NULL,
+    CONSTRAINT fk_evento_utente
+        FOREIGN KEY (ID_Utente_Creatore) REFERENCES UTENTE(ID_Utente)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    INDEX idx_evento_data (DataEvento),
+    INDEX idx_evento_categoria (NomeCategoria),
+    INDEX idx_evento_luogo (LuogoSvolgimento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabella POST
+CREATE TABLE POST (
+    ID_Post INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utente_Autore INT NOT NULL,
+    ID_Evento_Riferimento INT NOT NULL,
+    Commento TEXT,
+    Voto INT NOT NULL,
+    DataOraPost DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_voto CHECK (Voto BETWEEN 1 AND 5),
+    CONSTRAINT fk_post_utente
+        FOREIGN KEY (ID_Utente_Autore) REFERENCES UTENTE(ID_Utente)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_post_evento
+        FOREIGN KEY (ID_Evento_Riferimento) REFERENCES EVENTO(ID_Evento)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    INDEX idx_post_evento (ID_Evento_Riferimento),
+    INDEX idx_post_utente (ID_Utente_Autore)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
-*(Alternativa con NOT EXISTS)*
+
+### Metodo 2: Esecuzione Manuale delle Query (Se non usi XAMPP/phpMyAdmin)
+
+Se hai un server MySQL/MariaDB già configurato e preferisci usare la riga di comando o un altro strumento:
+
+1.  **Connettiti al tuo server database.**
+2.  **Crea il database** (se non esiste già), usando il nome `202425_5ib_gesualdo_carpoolingdb` (o il nome scelto):
+    ```sql
+    CREATE DATABASE IF NOT EXISTS 202425_5ib_gesualdo_carpoolingdb CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+    USE 202425_5ib_gesualdo_carpoolingdb;
+    ```
+3.  **Esegui le seguenti query SQL** per creare tutte le tabelle necessarie:
+
 ```sql
-SELECT
-    M.ID_Membro,
-    M.Nickname,
-    M.Nome,
-    M.Cognome,
-    M.Email
-FROM
-    MEMBRO AS M
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM COMMENTO AS CO
-    WHERE CO.ID_MembroAutore = M.ID_Membro
-);
+-- Tabella UTENTE
+CREATE TABLE UTENTE (
+    ID_Utente INT AUTO_INCREMENT PRIMARY KEY,
+    Nickname VARCHAR(50) NOT NULL UNIQUE,
+    Nome VARCHAR(50) NOT NULL,
+    Cognome VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    CategorieInteresse VARCHAR(255),
+    ProvinciaUtente VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabella EVENTO
+CREATE TABLE EVENTO (
+    ID_Evento INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utente_Creatore INT NOT NULL,
+    NomeCategoria VARCHAR(50) NOT NULL,
+    LuogoSvolgimento VARCHAR(150) NOT NULL,
+    DataEvento DATETIME NOT NULL,
+    Titolo VARCHAR(100) NOT NULL,
+    ArtistiCoinvolti TEXT NULL,
+    CONSTRAINT fk_evento_utente
+        FOREIGN KEY (ID_Utente_Creatore) REFERENCES UTENTE(ID_Utente)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+    INDEX idx_evento_data (DataEvento),
+    INDEX idx_evento_categoria (NomeCategoria),
+    INDEX idx_evento_luogo (LuogoSvolgimento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabella POST
+CREATE TABLE POST (
+    ID_Post INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utente_Autore INT NOT NULL,
+    ID_Evento_Riferimento INT NOT NULL,
+    Commento TEXT,
+    Voto INT NOT NULL,
+    DataOraPost DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_voto CHECK (Voto BETWEEN 1 AND 5),
+    CONSTRAINT fk_post_utente
+        FOREIGN KEY (ID_Utente_Autore) REFERENCES UTENTE(ID_Utente)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_post_evento
+        FOREIGN KEY (ID_Evento_Riferimento) REFERENCES EVENTO(ID_Evento)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    INDEX idx_post_evento (ID_Evento_Riferimento),
+    INDEX idx_post_utente (ID_Utente_Autore)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-**c. Per ogni evento il voto medio ottenuto in ordine di categoria e titolo**
+## Connessione tra PHP e Database (con XAMPP)
 
-```sql
-SELECT
-    CA.NomeCategoria,
-    E.Titolo AS TitoloEvento,
-    E.ID_Evento,
-    AVG(CO.Voto) AS VotoMedio
-FROM
-    EVENTO AS E
-JOIN
-    CATEGORIA AS CA ON E.ID_Categoria = CA.ID_Categoria
-LEFT JOIN -- Usiamo LEFT JOIN per includere eventi senza voti (VotoMedio sarà NULL)
-    COMMENTO AS CO ON E.ID_Evento = CO.ID_EventoRiferito
-GROUP BY
-    E.ID_Evento, -- Raggruppa per evento per calcolare la media dei suoi voti
-    CA.NomeCategoria, -- Includiamo nel GROUP BY per poterle selezionare e ordinare
-    E.Titolo
-ORDER BY
-    CA.NomeCategoria ASC, -- Ordina prima per nome categoria
-    E.Titolo ASC;         -- Poi per titolo evento
-```
+I file PHP di questo progetto si connetteranno al database usando delle credenziali specificate solitamente all'inizio degli script o in un file di configurazione separato (es: `config.php`).
 
-**d. I dati dell'utente che ha registrato il maggior numero di eventi**
+Con una installazione standard di XAMPP, i parametri di connessione sono generalmente `localhost`, `root` come utente e password vuota.
 
-```sql
-SELECT
-    M.ID_Membro,
-    M.Nickname,
-    M.Nome,
-    M.Cognome,
-    M.Email,
-    COUNT(E.ID_Evento) AS NumeroEventiInseriti
-FROM
-    MEMBRO AS M
-JOIN
-    EVENTO AS E ON M.ID_Membro = E.ID_MembroInseritore
-GROUP BY
-    M.ID_Membro, -- Raggruppa per membro per contare i suoi eventi
-    M.Nickname,
-    M.Nome,
-    M.Cognome,
-    M.Email
-ORDER BY
-    NumeroEventiInseriti DESC -- Ordina in modo decrescente per numero di eventi
-LIMIT 1; -- Prende solo il primo risultato (quello con il conteggio maggiore)
-```
+Tuttavia, **le credenziali per questo progetto sono**:
+
+*   **Server/Host:** `localhost`
+*   **Nome Utente:** `torsello`
+*   **Password:** `1234`
+*   **Nome Database:** `202425_5ib_gesualdo_eventi` (o il nome scelto durante la creazione)
+
+**Verifica i file PHP:** Quando svilupperai l'applicazione web, assicurati che le variabili usate per la connessione (`$servername`, `$username`, `$password`, `$dbname` o nomi simili) nei tuoi script PHP corrispondano ai valori corretti per il tuo ambiente e al nome del database che hai creato.
+
+## Avvio dell'Applicazione
+
+Questa sezione descrive come avviare l'applicazione web una volta che avrai sviluppato il codice PHP e l'interfaccia:
+
+1.  Assicurati che Apache e MySQL siano in esecuzione nel Pannello di Controllo XAMPP.
+2.  Copia l'intera cartella del tuo progetto PHP/HTML/CSS dentro la cartella `htdocs` di XAMPP (solitamente si trova in `C:\xampp\htdocs` su Windows o `/Applications/XAMPP/htdocs` su macOS).
+3.  Apri il browser e vai a `http://localhost/nome_cartella_progetto/` (sostituisci `nome_cartella_progetto` con il nome effettivo della cartella che hai copiato in `htdocs`).
+4.  Dovresti vedere la pagina iniziale dell'applicazione (la pagina principale o di login).
